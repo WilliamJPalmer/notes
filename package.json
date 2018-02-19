@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "meteor npm install --save babel-polyfill@6.26.0"
+    "test": "meteor test --driver-package=practicalmeteor:mocha"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
@@ -17,5 +17,8 @@
   },
   "engines": {
     "node": "4.6.2"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2"
   }
 }
