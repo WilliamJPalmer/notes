@@ -1,3 +1,3 @@
-# Boilerplate Meteor
+# Notes App
 
-This includes basic React and Auth setup.
+App where users can add, edit and delete notes.
