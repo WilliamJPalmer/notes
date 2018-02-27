@@ -5,6 +5,13 @@ import moment from 'moment';
 
 export const Notes = new Mongo.Collection('notes');
 
+if (Meteor.isServer){//checks to makes sure on server since publication can only be created on server.
+  Meteor.publish('notes', function(){//this creates the new publication.
+    return Notes.find({userId: this.userId});//use ES5 because will need access to "this" keyword, where the userId is stored
+    //want to get only notes that belong to user currently logged in.
+  });
+}
+
 Meteor.methods({
   'notes.insert'(){
     if(!this.userId){

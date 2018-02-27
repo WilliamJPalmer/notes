@@ -12,11 +12,19 @@ if(Meteor.isServer){
       updatedAt: 0,
       userId: 'testUserId1'
     };
+    const noteTwo = {//second seed data to test notes only being returned to logged in user.
+      _id: 'testNoteId2',
+      title: 'Things to buy',
+      body: 'a new sofa for the living room',
+      updatedAt: 0,
+      userId: 'testUserId2'
+    };
     beforeEach(function() {
       Notes.remove({});//this will remove all notes in the db.
       /* When running Meteor in test mode, it is using a separate databse. This means
       that Notes.remove ({}) will not delete development data. All development data is intact.*/
       Notes.insert(noteOne);
+      Notes.insert(noteTwo);
     });
     it('should insert new note', function(){
       const userId = 'testid'
@@ -103,6 +111,17 @@ if(Meteor.isServer){
       expect(() => {
         Meteor.server.method_handlers['notes.update'].apply({ userId: noteOne.userId });
       }).toThrow();
+    });
+    it('should return notes by user', function(){
+      const res = Meteor.server.publish_handlers.notes.apply({userId: noteOne.userId});//do not need [''] around notes because it does not have special characters, the . as in notes.update. Set to a variable so easier to use.
+      const notes = res.fetch();//res stands for response. fetch returns an array of the notes that match userId
+      expect(notes.length).toBe(1);//shold be 1 since there is only one note in the seed data for the userId in noteOne
+      expect(notes[0]).toEqual(noteOne);//the first item in the array should be noteOne.
+    });
+    it('should return 0 notes if user has 0 notes', function() {
+      const res = Meteor.server.publish_handlers.notes.apply({userId: 'testId'});//using a userId that does not exist in seed data
+      const notes = res.fetch();
+      expect (notes.length).toBe(0);//array length should be 0 since no test notes with userId of 'testId'
     });
   });
 }

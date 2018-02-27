@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 
 
-export default class Login extends React.Component {
+export class Login extends React.Component {//this is changed to a named export so the default createContainer can be used.
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +15,8 @@ export default class Login extends React.Component {
     event.preventDefault();//prevents a full page refresh
     let email = this.refs.email.value.trim();
     let password = this.refs.password.value.trim();
-    Meteor.loginWithPassword({email},password, (err) => {
+    this.props.loginWithPassword({email},password, (err) => {//changed from Meteor.loginWithPassword because
+      //the createContainer export has this already and it was defined as a prop with Login.PropTypes.
       //console.log('login callback', err);
       if (err) {
         this.setState({error: err.reason});
@@ -47,3 +49,13 @@ export default class Login extends React.Component {
     );
   }
 }
+Login.propTypes = {
+  loginWithPassword: React.PropTypes.func.isRequired
+}
+
+export default createContainer(() => {//default export so does not need { } when imported.
+  return{
+    loginWithPassword: Meteor.loginWithPassword//this overrides the Meteor.loginWithPassword, which has been changed
+    //to this.props.loginWithPassword, line 18ish
+  };
+}, Login);
