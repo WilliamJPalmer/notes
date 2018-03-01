@@ -2,6 +2,7 @@ import 'babel-polyfill';
 import {Meteor} from 'meteor/meteor';
 import React from 'react';
 import {Router, Route, browserHistory} from 'react-router';
+import {Session} from 'meteor/session';
 
 import Signup from '../ui/Signup';
 import Dashboard from '../ui/Dashboard';
@@ -32,6 +33,16 @@ const onEnterPrivatePage = () => {
     //console.log(browserHistory.getCurrentLocation().pathname);
   }
 };
+const onEnterNotePage = (nextState) => {
+  if (!Meteor.userId()){
+    //console.log("onEnterPrivatePage method");
+    browserHistory.replace('/');//.replace instead of .push
+    //console.log(browserHistory.getCurrentLocation().pathname);
+  } else {
+    //console.log(nextState);
+    Session.set('selectedNoteId', nextState.params.id);//nextState is a prperty of onEnter and can get the params.id there.
+  }
+};
 export const onAuthChange = (isAuthenticated) => {
   const pathname = browserHistory.getCurrentLocation().pathname;//gets the current page.
   const isUnauthenticatedPage = unauthenticatedPages.includes(pathname);//checks to see if the current page is in the unauthenticatedPages array
@@ -50,7 +61,7 @@ export const routes = (
     <Route path='/' component={Login} onEnter={onEnterPublicPage}/>
     <Route path='/signup' component={Signup} onEnter={onEnterPublicPage}/>
     <Route path='/dashboard' component={Dashboard} onEnter={onEnterPrivatePage}/>
-    <Route path='/dashboard/:id' component={Dashboard} onEnter={onEnterPrivatePage}/>
+    <Route path='/dashboard/:id' component={Dashboard} onEnter={onEnterNotePage}/>
     <Route path='*' component={NotFound}/>
   </Router>
 );
