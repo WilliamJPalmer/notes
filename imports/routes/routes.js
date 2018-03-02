@@ -9,44 +9,16 @@ import Dashboard from '../ui/Dashboard';
 import NotFound from '../ui/NotFound';
 import Login from '../ui/Login';
 
-const unauthenticatedPages = ['/', '/signup'];// pages that don't need to be logged in to see
-const authenticatedPages = ['/dashboard'];//avaialble only is logged in
-const onEnterPublicPage = () =>{
-  if (Meteor.userId()){
-    //browserHistory.push('/links');
-    /* .push adds the pathname to the browserHistory. This means that if the browser's
-    back button is clicked, the page will go to the page that pushed to the /links page.
-    Using .replace rather than .push will overwrite the current page name with the
-    redirected page name.
-    the .push path from page to page(if user is logged in) and using browser back button
-    blankpage -> google.com -> localhost:3000 -.push-> localhost:3000/links <-back- localhost:3000 -.push-> localhost:3000/links
-
-    the .replace path from page to page(if user is logged in) and using browser back button
-    blankpage -> google.com -> localhost:3000 -.replace-> localhost:3000/links <-back- google.com*/
-    browserHistory.replace('/dashboard  ');//.replace instead of .push
-  }
-};
-const onEnterPrivatePage = () => {
-  if (!Meteor.userId()){
-    //console.log("onEnterPrivatePage method");
-    browserHistory.replace('/');//.replace instead of .push
-    //console.log(browserHistory.getCurrentLocation().pathname);
-  }
-};
+/* removed the onEnterPublicPage and onEnterPrivatePage functions as they are not needed due to nesting routes and the globalOnChange nad globalOnEnter methods that make use of the privacy prop defined in each route. */
 const onEnterNotePage = (nextState) => {
-  if (!Meteor.userId()){
-    //console.log("onEnterPrivatePage method");
-    browserHistory.replace('/');//.replace instead of .push
-    //console.log(browserHistory.getCurrentLocation().pathname);
-  } else {
-    //console.log(nextState);
-    Session.set('selectedNoteId', nextState.params.id);//nextState is a prperty of onEnter and can get the params.id there.
-  }
+  Session.set('selectedNoteId', nextState.params.id);//nextState is a property of onEnter and can get the params.id there.
 };
-export const onAuthChange = (isAuthenticated) => {
-  const pathname = browserHistory.getCurrentLocation().pathname;//gets the current page.
-  const isUnauthenticatedPage = unauthenticatedPages.includes(pathname);//checks to see if the current page is in the unauthenticatedPages array
-  const isAuthenticatedPage = authenticatedPages.includes(pathname);//checks to see if the current page is in the authenticatedPages array
+const onLeaveNotePage = () => {
+  Session.set('selectedNoteId', undefined);
+};
+export const onAuthChange = (isAuthenticated, currentPagePrivacy) => {
+  const isUnauthenticatedPage = currentPagePrivacy === 'unauth';//if currentPagePrivacy is eqaul to 'unauth' currently on unauth page
+  const isAuthenticatedPage = currentPagePrivacy === 'auth';//if currentPagePrivacy is eqaul to 'auth' currently on auth page
 
   if (isAuthenticated && isUnauthenticatedPage){
     browserHistory.replace('/dashboard')// if user is logged in and navigates to an unauthenticate page, goes to links page
@@ -56,12 +28,22 @@ export const onAuthChange = (isAuthenticated) => {
     //.replace instead of .push
   }
 };
+
+export const globalOnChange = (prevState, nextState) => {//global applies to all routes, nested and non-nested.
+  globalOnEnter(nextState);//allows reuse of the code below without having to rewrite it
+};
+export const globalOnEnter = (nextState) => {
+  const lastRoute = nextState.routes[nextState.routes.length -1];//this grabs the last route on the routes array.
+  Session.set('currentPagePrivacy', lastRoute.privacy);//key value pair with currentPagePrivacy being set to value of privacy in the lastRoute. Because the privacy is a prop of the route, we can access the prop and get the value of it. for the '/' and '/signup' pages, the value of currentPagePrivacy will be "unauth" and will be "auth" for the '/dashboard' pages. for '*', it will be undefined.
+};
 export const routes = (
   <Router history={browserHistory}>
-    <Route path='/' component={Login} onEnter={onEnterPublicPage}/>
-    <Route path='/signup' component={Signup} onEnter={onEnterPublicPage}/>
-    <Route path='/dashboard' component={Dashboard} onEnter={onEnterPrivatePage}/>
-    <Route path='/dashboard/:id' component={Dashboard} onEnter={onEnterNotePage}/>
-    <Route path='*' component={NotFound}/>
+    <Route onEnter={globalOnEnter} onChange={globalOnChange}>
+      <Route path='/' component={Login} privacy="unauth"/>
+      <Route path='/signup' component={Signup} privacy="unauth"/>
+      <Route path='/dashboard' component={Dashboard} privacy="auth"/>
+      <Route path='/dashboard/:id' component={Dashboard} privacy="auth" onEnter={onEnterNotePage} onLeave={onLeaveNotePage}/>
+      <Route path='*' component={NotFound}/>
+    </Route>
   </Router>
-);
+);//privacy="unauth" and privacy="auth" are being used for public and private pages. Allows to removed the onEnter={onEnterPublic/PrivatePage} from the first three routes wiht paths

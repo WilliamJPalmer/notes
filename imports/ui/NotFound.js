@@ -28,4 +28,4 @@ import { Link } from 'react-router';
        </div>
      </div>
    )
- }
+ };
