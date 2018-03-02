@@ -2,7 +2,7 @@ import React from 'react';
 
 import PrivateHeader from './PrivateHeader';//don't need braces here because we are importing. This is the containerized component
 import NoteList from './NoteList';
-// import NoteListHeader from './NoteListHeader';
+import Editor from './Editor';
 
 
 export default () => {
@@ -11,6 +11,7 @@ export default () => {
       <PrivateHeader title="Dashboard"/>
       <div className="page-content">
         <NoteList/>
+        <Editor/>
       </div>
     </div>
   );
