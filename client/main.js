@@ -12,7 +12,9 @@ import '../imports/startup/simple-schema-configuration';
 Tracker.autorun(() => {
   const isAuthenticated = !!Meteor.userId(); //takes the truthy or falsey and turns it into a true boolena value.
   // a single ! with flip the value. two !! will return true or false.
-  onAuthChange(isAuthenticated);
+  const currentPagePrivacy = Session.get('currentPagePrivacy');
+
+  onAuthChange(isAuthenticated, currentPagePrivacy);
 });
 
 Session.set()
