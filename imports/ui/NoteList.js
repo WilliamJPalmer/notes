@@ -32,7 +32,11 @@ export default createContainer(() => {
   Meteor.subscribe('notes');
 
   return {
-    notes: Notes.find().fetch().map((note) => {//for every item in the notes array
+    notes: Notes.find({},{
+      sort: {
+        updatedAt: -1
+      }
+    }).fetch().map((note) => {//for every item in the notes array
       return { // return an object
         ...note, //Use spread operator to keep everyting that Note already has.
         selected: note._id === selectedNoteId// add 'selected' property. Selected will be a boolean and want to check
