@@ -4,17 +4,41 @@ import { Session } from 'meteor/session';
 import { Meteor } from 'meteor/meteor';
 
 import { Notes } from '../api/notes';
+import { browserHistory } from 'react-router';
 
 export class Editor extends React.Component {
-  handleBodyChange(event) {
-    this.props.call('notes.update', this.props.note._id, {
-      body: event.target.value
-    });//'notes.update' takes two arguments, first is id of note and second is update object.
-  }//event.target gives access to the DOM element and value gives access to update the body
-  handleTitleChange(event) {
-    this.props.call('notes.update', this.props.note._id, {
-      title: event.target.value
-    });
+  constructor(props){
+    super(props);
+    this.state = {
+      title: '',
+      body: ''
+    };
+  }
+  handleBodyChange(e) {
+    const body = e.target.value;
+    this.setState({ body });//in ES5, it would be this.setStae({body: body})
+    this.props.call('notes.update', this.props.note._id, { body });//'notes.update' takes two arguments, first is id of note and second is update object.
+  }//event, e,.target gives access to the DOM element and value gives access to update the body
+  handleTitleChange(e) {
+    const title = e.target.value;
+    this.setState({ title });
+    this.props.call('notes.update', this.props.note._id, { title });
+  }
+  handleRemoval(){
+    this.props.call('notes.remove', this.props.note._id);
+    this.props.browserHistory.push('/dashboard');
+  }
+  componentDidUpdate(prevProps, prevState){// componentDidUpdate is a lifecycle method
+    //componentDidUpdate is called right after the props or state for the coponent get changed. prevProps and prevState are available for accessing old values before change and still be able to use new values.
+    const currentNoteId = this.props.note ? this.props.note._id : undefined;// if the note exists, can set current note id to this.props.note._id. If does not exist, set to undefined
+    const prevNoteId = prevProps.note ? prevProps.note._id : undefined;// if previous note
+
+    if (currentNoteId && currentNoteId !== prevNoteId) {//if currentNoteId exist and, &&, currentNoteid is not equal to prevNoteId
+      this.setState({
+        title: this.props.note.title,
+        body: this.props.note.body
+      });
+    }
   }
   render() {
     // if(this.props.note){
@@ -33,9 +57,9 @@ export class Editor extends React.Component {
     if(this.props.note){//if a note is found with the id
       return(
         <div>
-          <input value={this.props.note.title} placeholder='Your Note Title' onChange={this.handleTitleChange.bind(this)}/>
-          <textarea value={this.props.note.body} placeholder='Your Note Content' onChange={this.handleBodyChange.bind(this)}></textarea>
-          <button>Delete Note</button>
+          <input value={this.state.title} placeholder='Your Note Title' onChange={this.handleTitleChange.bind(this)}/>
+          <textarea value={this.state.body} placeholder='Your Note Content' onChange={this.handleBodyChange.bind(this)}></textarea>
+          <button onClick={this.handleRemoval.bind(this)}>Delete Note</button>
         </div>
       );
     } else {
@@ -50,7 +74,9 @@ export class Editor extends React.Component {
 
 Editor.propTypes = {
   note: React.PropTypes.object,
-  selectedNoteId: React.PropTypes.string
+  selectedNoteId: React.PropTypes.string,
+  call: React.PropTypes.func.isRequired,
+  browserHistory: React.PropTypes.object.isRequired
 };
 
 export default createContainer(() => {
@@ -59,6 +85,7 @@ export default createContainer(() => {
   return {
     selectedNoteId: selectedNoteId,
     note: Notes.findOne(selectedNoteId),
-    call: Meteor.call// adding call allows this.props.call in the handleBodyChange and handleTitleChange methods up top
+    call: Meteor.call,// adding call allows this.props.call in the handleBodyChange and handleTitleChange methods up top
+    browserHistory
   };
 }, Editor);
