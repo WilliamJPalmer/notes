@@ -26,7 +26,8 @@ export class Editor extends React.Component {
   }
   handleRemoval(){
     this.props.call('notes.remove', this.props.note._id);
-    this.props.browserHistory.push('/dashboard');
+    this.props.browserHistory.push('/dashboard');//this handles removing a note and then redirecting to the dashboard.
+    //the id for the note was staying in the URL and this redirects to the default dashboard with no note selected.
   }
   componentDidUpdate(prevProps, prevState){// componentDidUpdate is a lifecycle method
     //componentDidUpdate is called right after the props or state for the coponent get changed. prevProps and prevState are available for accessing old values before change and still be able to use new values.
@@ -65,7 +66,7 @@ export class Editor extends React.Component {
     } else {
       return (
         <p>
-          {this.props.selectedNoteId ? 'Note Not Found' : 'Please select or create a Note to get started.'};
+          {this.props.selectedNoteId ? 'Note Not Found' : 'Please select or create a Note to start'}
         </p>
       );//if the selectedNoteId in URL not found, first message. If selectedNoteId empty string, second message. This
     }// ternary operator takes the places of the else if and else in the code commented out above.
