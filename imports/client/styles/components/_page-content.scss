@@ -3,12 +3,14 @@
   height: $page-content-height;
   margin: 0 auto;
   max-width: $site-max-width;
-  padding: $space;
+  padding: $large-space $space;//@large-space for top and bottom, $space for L and R
 }
 
 .page-content__sidebar{
   display: flex;
+  padding-right: $large-space;
   width: $page-content-sidebar-width;
+
 }
 
 .page-content__main{

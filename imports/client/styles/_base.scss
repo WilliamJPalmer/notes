@@ -8,7 +8,7 @@
  }
 
  body{
-   font-family: Helvetica, Arial, Sans-Serif;
+   font-family: $body-default-font-family;
    font-size: $base-font-size;
    background-color: $body-background-color;
    color: $body-default-color;
@@ -35,8 +35,11 @@
    color: $body-default-color;
  }
 
- input[type=text], input[type=email], input[type=password]{
+//default styling for all input fields and textareas.
+ input[type=text], input[type=email], input[type=password], textarea {
    border: 1px solid $input-border-color;
+   color: $body-default-color;
+   font-family: $body-default-font-family;
    font-size: $base-font-size;
    margin-bottom: $space;
    padding: $input-spacing;
