@@ -45,15 +45,16 @@ $button-secondary-border-color: $grey;
 // Title-Bar
 $title-bar-bg: $brand-primary;
 $title-bar-text-color: white;
-$title-bar-height: 6rem;
+$title-bar-height: 5.5rem;
 
 //Item
-$item-bg: $light-grey;
-$item-border: darken($item-bg, 8%);
-$item-text-color: $dark-grey;
+$item-border-width: 5px;
+// $item-bg: $light-grey;
+// $item-border: darken($item-bg, 8%);
+// $item-text-color: $dark-grey;
 
 //Page Content
-$page-content-sidebar-width: 30rem;
+$page-content-sidebar-width: 20rem;
 $page-content-main-width: calc(#{$site-max-width} - #{$page-content-sidebar-width});
 // calc is built into CSS. To use variable, need to preface with # and put variable in {}, be sure to include $
 $page-content-height: calc(100vh - #{$title-bar-height});

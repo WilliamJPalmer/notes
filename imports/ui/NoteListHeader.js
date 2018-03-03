@@ -5,8 +5,8 @@ import { Session } from 'meteor/session';
 
 export const NoteListHeader = (props) => {
   return (
-    <div>
-      <button onClick={() => {
+    <div className="item-list__header">
+      <button className="button" onClick={() => {
         props.meteorCall('notes.insert', (err, res) => {
           if(res){//if there is a response to creating a new note
             props.Session.set('selectedNoteId', res)//sets the selectedNoteId to the id of the newly created note.
