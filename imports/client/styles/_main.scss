@@ -3,6 +3,7 @@ are not imported, any styling will not show up.
 the variables file needs ot be imported first since other files may be using
 variables in defining styles. */
 @import './variables';
+@import './mixins/media-query-mixins';
 @import './base';
 @import './components/boxed-view';
 @import './components/button';
