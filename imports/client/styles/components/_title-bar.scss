@@ -4,6 +4,7 @@
 }
 
 .title-bar__content{
+  align-items: center;
   display: flex;
   height: $title-bar-height;
   justify-content: space-between;
@@ -21,3 +22,14 @@
 //   margin: 0;
 //   text-decoration: underline;
 // }
+
+.title-bar__nav-toggle{
+  cursor: pointer;
+  height: 2rem;
+  width: 2rem;
+
+  @include desktop{
+    display: none;//hides the nav bars and 'x' when in desktop size
+
+  }
+}

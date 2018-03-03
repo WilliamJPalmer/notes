@@ -23,7 +23,7 @@ to use mixins,
 @include funkyBorder(20px, purple)
 
 @include funkyBorder();
-@include funkyBorder(20px, green);***over writes the values when defined.
+@include funkyBorder(20px, green);***over writes the values when defined. to over write second argument, use null for the first argument.
 
 Can use selectors, like *, to target everything inside where the mixins is placed.
 Can place mixins inside @media as well.

@@ -11,12 +11,30 @@
 
 .page-content__sidebar{
   //display: flex;
-  display: none;
-  padding-right: $large-space;
-  width: $page-content-sidebar-width;
+  //display: none;
+  display: flex;
+  transition: left .5s ease;
+
+  position: fixed;//this will position an item relative to browser's viewport.
+  top: $title-bar-height;//setting the t,l,r,b to 0 will make sure that the modal covers the entire screen
+  left: -100vw;//sets sidebar off-screen by width of the screen
+  //right: 0; no need for right value.
+  bottom: 0;
+  width: 100vw;//this will have sidebar fill the screen
+
   @include desktop {
     display: flex;
+    padding-right: $large-space;
+    position: static;
+    width: $page-content-sidebar-width;
   }
+}
+
+.is-nav-open .page-content__sidebar {
+  //'is-nav-open' is the target from document.body.classList, in PrivateHeader.js, that gets toggled
+  // if it does not exist, the page-content__sidebar stlyes here will never appear.
+  //display: block;
+  left: 0;
 }
 
 .page-content__main{
