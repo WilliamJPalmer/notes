@@ -5,6 +5,7 @@
 
 .title-bar__content{
   display: flex;
+  height: $title-bar-height;
   justify-content: space-between;
   max-width: $site-max-width;
   margin: 0 auto;
