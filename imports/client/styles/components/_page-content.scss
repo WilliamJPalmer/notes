@@ -14,13 +14,16 @@
   //display: none;
   display: flex;
   transition: left .5s ease;
+  width: 100vw;//this will have sidebar fill the screen
 
   position: fixed;//this will position an item relative to browser's viewport.
   top: $title-bar-height;//setting the t,l,r,b to 0 will make sure that the modal covers the entire screen
   left: -100vw;//sets sidebar off-screen by width of the screen
   //right: 0; no need for right value.
   bottom: 0;
-  width: 100vw;//this will have sidebar fill the screen
+  z-index: 1;// makes sure that the sidebar appears on top. There is an issue where the -webkit-overflow-scrolling: touch
+  // makes the textarea for the body always appear on top.
+
 
   @include desktop {
     display: flex;

@@ -3,6 +3,7 @@
   border: 1px solid $grey;
   overflow-y: scroll;
   width: 100%;
+  -webkit-overflow-scrolling: touch;// allows for momentum scrolling
 }
 
 .item-list__header {
