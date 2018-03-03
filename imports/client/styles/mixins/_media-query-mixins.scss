@@ -1,0 +1,38 @@
+
+@mixin desktop{
+  @media (min-width: 50rem){
+    @content;
+  }
+}
+/* Mixins are specific to SCSS while media queries are part of scss
+@mixin funkyBorder {
+  border: 10px solid orange;
+}
+
+@mixin funkyBorder ($borderSize, $borderColor){
+  border: $borderSize solid $borderColor;
+}
+
+@mixin funkyBorder ($borderSize: 10px, $borderColor: orange){
+  border: $borderSize solid $borderColor;
+}
+
+to use mixins,
+@include funkyBorder();
+
+@include funkyBorder(20px, purple)
+
+@include funkyBorder();
+@include funkyBorder(20px, green);***over writes the values when defined.
+
+Can use selectors, like *, to target everything inside where the mixins is placed.
+Can place mixins inside @media as well.
+Using @content  in a mixin will make a placeholder for whatever values
+are placed inisde the { } for the mixin when defined
+@mixin funkyBorder{
+  @content;
+}
+@include funkyBorder{
+  padding: $large-space;
+}
+*/
